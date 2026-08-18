@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { User } from '../models/user.model';
-import Order from '../models/order.model';
-import { Gigs as Gig } from '../models/gig.model';
+import { User } from '../models/User_model';
+import Order from '../models/orderModel';
+import { Gigs as Gig } from '../models/gigs.models';
 
 /**
  * Controller to fetch Dashboard Statistics for Freelancer and Client roles

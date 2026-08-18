@@ -1,12 +1,28 @@
 import express, { Application,Response,Request } from "express";
 import {Gigs} from "../models/gigs.models"
+import Order from '../models/orderModel';
+
 
 export const getEntireGigs = async (req:Request,res:Response) => {
     try{
-        const crew = await Gigs.find()
+        const page = Number(req.query.page) || 1
+        const limit = Number(req.query.limit) || 10
+        const skip = (page - 1) * limit
+        const totalGigs = await Gigs.countDocuments();
+        const gigs = await Gigs.find().skip(skip).limit(limit)
+
+        const totalPages = Math.ceil(totalGigs / limit);
         return res.status(200).json({
             message : 'All Gigs :',
-            crew
+            pagination: {
+                totalGigs,
+                totalPages,
+                currentPage: page,
+                limit,
+                hasNextPage: page < totalPages,
+                hasPrevPage: page > 1
+            },
+            gigs
         })
     }catch(e){
         const errorMessage = e instanceof Error ? e.message : "an unknown error occured"
@@ -24,6 +40,15 @@ export const deleteGigs =  async (req:Request,res:Response) =>{
         if(!gigId){
             return res.status(404).json({
                 message : "No gig with this id"
+            })
+        }
+        const pendingorder = await Order.findOne({
+            gig : req.params.id,
+            status: {$ne: 'Completed'}
+        })
+        if(pendingorder){
+            return res.status(400).json({
+                message : "There is an active order for this gig - can't be deleted -"
             })
         }
         const deletedGig = await Gigs.deleteOne(

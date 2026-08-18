@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { getDashboardStats } from "../controllers/Order.Dashboard.controller";
-import authMiddleware from "../middlewares/authMiddleware";
+import {protect} from "../middlewares/authMiddleware";
 
 const router = Router();
 
@@ -9,6 +9,6 @@ const router = Router();
  * @desc    Get dashboard statistics for the authenticated user (Freelancer or Client)
  * @access  Private (Requires valid JWT)
  */
-router.get("/stats", authMiddleware, getDashboardStats);
+router.get("/stats", protect, getDashboardStats);
 
 export default router;
