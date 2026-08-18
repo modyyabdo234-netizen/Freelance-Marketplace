@@ -1,3 +1,6 @@
 review option [models & controller]
 login 
 you can try http://localhost:3000/auth/login & body => email and pass 
+Authorization [authzMiddleware]
+favorites [controller , userShema]
+Pagination [getEntireGigs]
