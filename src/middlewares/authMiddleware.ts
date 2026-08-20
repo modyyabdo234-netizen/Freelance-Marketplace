@@ -16,14 +16,12 @@ export const protect = (req: Request, res: Response, next: NextFunction): void =
     token = req.cookies.token;
   }
 
-  // 2. التحقق من وجود التوكن
   if (!token) {
     res.status(401).json({ message: 'No token provided' });
     return;
   }
 
   try {
-    // 3. فك تشفير التوكن والتحقق من صحته
     const decoded = jwt.verify(
       token,
       process.env.JWT_SECRET || 'your_secret_key'
