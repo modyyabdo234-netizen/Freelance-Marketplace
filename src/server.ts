@@ -2,6 +2,8 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import swaggerUI from "swagger-ui-express"
+import {specs} from "./config/swagger"
 
 import authRoutes from "./routes/auth.routes";
 import GigRouter from "./routes/gigs.routes";
@@ -23,7 +25,7 @@ dotenv.config();
 
 app.use(cookieParser());
 app.use(express.json());
-
+app.use("/api-docs",swaggerUI.serve,swaggerUI.setup(specs))
 
 // Routes
 app.use("/auth", authRoutes);

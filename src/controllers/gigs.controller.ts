@@ -1,7 +1,7 @@
 import express, { Application,Response,Request } from "express";
 import {Gigs} from "../models/gigs.models"
-import Order from '../models/orderModel';
-
+import Order from '../models/orderModel'
+import {User} from "../models/User_model"
 
 export const getEntireGigs = async (req:Request,res:Response) => {
     try{
@@ -9,7 +9,7 @@ export const getEntireGigs = async (req:Request,res:Response) => {
         const limit = Number(req.query.limit) || 10
         const skip = (page - 1) * limit
         const totalGigs = await Gigs.countDocuments();
-        const gigs = await Gigs.find().skip(skip).limit(limit)
+        const gigs = await Gigs.find().populate('Owner', 'full_name').skip(skip).limit(limit)
 
         const totalPages = Math.ceil(totalGigs / limit);
         return res.status(200).json({
@@ -104,7 +104,10 @@ export const updateGigs = async (req:Request,res:Response) => {
 
 export const createGig = async (req:Request,res:Response) => {
     try {
-        const nemwGig = await Gigs.create(req.body)
+        const nemwGig = await Gigs.create({
+            ...req.body,
+            Owner: req.user?.id
+        })
 
         return res.status(201).json({
             message : "Gig is created successfully ",
@@ -130,8 +133,14 @@ export const filterAndSearchGig = async (req:Request,res:Response) => {
         if(Category && typeof Category === 'string'){
             filter.Category = Category
         }
-        if(FreelancerName && typeof FreelancerName === 'string'){
-            filter.FreelancerName = FreelancerName 
+        if (FreelancerName && typeof FreelancerName === 'string') {
+            const users = await User.find({ full_name: FreelancerName }).select('_id');
+            
+            // استخراج الـ IDs من نتيجة البحث
+            const userIds = users.map(u => u._id);
+            
+            // الربط بفيلد Owner الموجود في schema الـ Gigs
+            filter.Owner = { $in: userIds }; 
         }
         if(PriceMin || PriceMax ){
             filter.Price = {}
@@ -142,7 +151,7 @@ export const filterAndSearchGig = async (req:Request,res:Response) => {
                 filter.Price.$lte = Number(PriceMax)
             }
         }
-        const gigs = await Gigs.find(filter)
+        const gigs = await Gigs.find(filter).populate('Owner', 'full_name');
         res.status(200).json({
             message : " The filtred gigs : ",
             gigs

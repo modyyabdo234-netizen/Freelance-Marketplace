@@ -23,5 +23,52 @@ const orderSchema = new Schema<IOrder>(
   },
   { timestamps: true } 
 );
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Order:
+ *       type: object
+ *       required:
+ *         - gig
+ *         - client
+ *         - freelancer
+ *         - price
+ *       properties:
+ *         gig:
+ *           type: string
+ *           format: objectid
+ *           description: gig id
+ *         client:
+ *           type: string
+ *           format: objectid
+ *           description: client id
+ *         freelancer:
+ *           type: string
+ *           format: objectid
+ *           description: freelancer id
+ *         status:
+ *           type: string
+ *           enum: [Pending, Accepted, Completed]
+ *           default: Pending
+ *           description: current state of the order
+ *         price:
+ *           type: number
+ *           description: Order price
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *       example:
+ *         gig: "65abc9876543210fedcba321"
+ *         client: "65abc1112223334445556667"
+ *         freelancer: "65abc7778889990001112223"
+ *         status: "Pending"
+ *         price: 150
+ *         createdAt: "2026-08-20T20:30:00.000Z"
+ *         updatedAt: "2026-08-20T20:30:00.000Z"
+ */
 
 export default mongoose.model<IOrder>('Order', orderSchema);

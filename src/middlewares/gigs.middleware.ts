@@ -6,7 +6,7 @@ export const ValidateGig = async (req:Request,res:Response,next:NextFunction) =>
     try {
         const price = req.body.Price
         if(price <= 0){
-            return res.status(200).json({
+            return res.status(400).json({
             message : "Price must be a positive number"
             })
         }
