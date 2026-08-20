@@ -83,9 +83,10 @@ export const updateGigs = async (req:Request,res:Response) => {
         if(Category){
             update.Category = Category
         }
-        const updatedMember = await Gigs.updateOne(
+        const updatedMember = await Gigs.findOneAndUpdate(
             {_id : req.params.id },
             {$set : update},
+            {new : true}
         )
         res.status(200).json({
         message : 'Gigs updated successfully',
