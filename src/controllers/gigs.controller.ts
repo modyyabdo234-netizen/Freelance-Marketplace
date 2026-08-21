@@ -37,6 +37,7 @@ export const getEntireGigs = async (req:Request,res:Response) => {
 export const deleteGigs =  async (req:Request,res:Response) =>{
     try{
         const gigId = await Gigs.findById(req.params.id)
+        const userId = (req as any).user?.id
         if(!gigId){
             return res.status(404).json({
                 message : "No gig with this id"
@@ -51,10 +52,14 @@ export const deleteGigs =  async (req:Request,res:Response) =>{
                 message : "There is an active order for this gig - can't be deleted -"
             })
         }
-        const deletedGig = await Gigs.deleteOne(
-            {_id : req.params.id },
+        const deletedGig = await Gigs.findOneAndDelete(
+            { _id: req.params.id, Owner: userId }
             
         )
+        if(!deletedGig){
+            res.status(404).json({ message: 'Gig not found or unauthorized' });
+            return;
+        }
         res.status(200).json({
         message : 'Gig deleted successfully',
     })
@@ -70,6 +75,7 @@ export const deleteGigs =  async (req:Request,res:Response) =>{
 export const updateGigs = async (req:Request,res:Response) => {
     try{
         const {Title, Description, Price, Category} = req.body
+        const userId = (req as any).user?.id
         const update : any ={}
         if(Title){
             update.Title = Title
@@ -83,14 +89,19 @@ export const updateGigs = async (req:Request,res:Response) => {
         if(Category){
             update.Category = Category
         }
-        const updatedMember = await Gigs.findOneAndUpdate(
-            {_id : req.params.id },
+
+        const updatedGig = await Gigs.findOneAndUpdate(
+            { _id: req.params.id, Owner: userId },
             {$set : update},
             {new : true}
         )
+        if (!updatedGig) {
+            res.status(404).json({ message: 'Gig not found or unauthorized' });
+            return;
+        }
         res.status(200).json({
         message : 'Gigs updated successfully',
-        updatedMember
+        updatedGig
     })
     }catch(e){
         const errorMessage = e instanceof Error ? e.message : "an unknown error occured"
@@ -135,11 +146,8 @@ export const filterAndSearchGig = async (req:Request,res:Response) => {
         }
         if (FreelancerName && typeof FreelancerName === 'string') {
             const users = await User.find({ full_name: FreelancerName }).select('_id');
-            
-            // استخراج الـ IDs من نتيجة البحث
             const userIds = users.map(u => u._id);
             
-            // الربط بفيلد Owner الموجود في schema الـ Gigs
             filter.Owner = { $in: userIds }; 
         }
         if(PriceMin || PriceMax ){

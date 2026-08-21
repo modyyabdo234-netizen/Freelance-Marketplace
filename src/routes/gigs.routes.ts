@@ -9,46 +9,69 @@ const router = Router();
 router.get("/gig/search",filterAndSearchGig)
 /**
  * @swagger
- * /freelance/gig/search:
+ * /freelance/gig:
  *   get:
- *     summary: Filter gigs according to Category,Title,FreelancerName or Price
+ *     summary: get all the gigs  with pagination
  *     tags: 
  *       - Gigs
  *     parameters:
  *       - in: query
- *         name: Category
- *         schema:
- *           type: string
- *         description: Filter by Category 
- *       - in: query
- *         name: Title
- *         schema:
- *           type: string
- *         description: Title of the gig
- *       - in: query
- *         name: FreelancerName
- *         schema:
- *           type: string
- *         description: Owner of the gig
- *       - in: query
- *         name: PriceMin
+ *         name: page
  *         schema:
  *           type: number
- *         description: Minimum Price constraint
+ *           default: 1
+ *         description: Page number for pagination
  *       - in: query
- *         name: PriceMax
+ *         name: limit
  *         schema:
  *           type: number
- *         description: Maximum Price constraint
+ *           default: 10
+ *         description: Number of gigs per page
  *     responses:
  *       200:
- *         description: Filtered gigs
+ *         description: get all gigs
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Gigs'
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "All Gigs :"
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     totalGigs:
+ *                       type: number
+ *                     totalPages:
+ *                       type: number
+ *                     currentPage:
+ *                       type: number
+ *                     limit:
+ *                       type: number
+ *                     hasNextPage:
+ *                       type: boolean
+ *                     hasPrevPage:
+ *                       type: boolean
+ *                 gigs:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Gigs'
+ *             example:
+ *               message: "All Gigs :"
+ *               pagination:
+ *                 totalGigs: 25
+ *                 totalPages: 3
+ *                 currentPage: 1
+ *                 limit: 10
+ *                 hasNextPage: true
+ *                 hasPrevPage: false
+ *               gigs:
+ *                   title: "Embedded Systems Firmware C/C++"
+ *                   price: 200
+ *                   Owner:
+ *                     _id: "65abc1112223334445556667"
+ *                     full_name: "jana"
  *       400:
  *         description: Bad request
  */
