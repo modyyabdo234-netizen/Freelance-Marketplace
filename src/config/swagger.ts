@@ -1,5 +1,4 @@
-import swaggerJSDoc from "swagger-jsdoc"
-import path from "path";
+import swaggerJSDoc from "swagger-jsdoc";
 
 const options = {
     definition: {
@@ -7,7 +6,7 @@ const options = {
         info: {
             title: "Freelance marketplace API",
             version: "1.0.0",
-            description: "project about managing freelancer gigs and client orders "
+            description: "project about managing freelancer gigs and client orders"
         },
         components: {
             securitySchemes: {
@@ -20,15 +19,16 @@ const options = {
             }
         },
         servers : [{
-           url: "/"} 
-        ]
+            url: "/"
+        }]
     },
+    // التعديل هنا: استخدام مسارات مباشرة تدعمها مكتبة البحث
     apis: [
-        path.join(__dirname, "../routes/*.ts"),
-        path.join(__dirname, "../models/*.ts"),
-        path.join(__dirname, "../routes/*.js"),
-        path.join(__dirname, "../models/*.js")
+        "./src/routes/*.ts",
+        "./src/models/*.ts",
+        "./dist/routes/*.js",  // إذا كنت تقوم بعمل Build למجلد dist 
+        "./dist/models/*.js"
     ]
 }
 
-export const specs = swaggerJSDoc(options)
+export const specs = swaggerJSDoc(options);

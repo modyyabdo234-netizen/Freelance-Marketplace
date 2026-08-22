@@ -9,7 +9,7 @@ interface JwtPayload {
 export const protect = (req: Request, res: Response, next: NextFunction): void => {
   let token: string | undefined;
 
-  // 1. قراءة التوكن من Header أو Cookies
+
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     token = req.headers.authorization.split(' ')[1];
   } else if (req.cookies && req.cookies.token) {

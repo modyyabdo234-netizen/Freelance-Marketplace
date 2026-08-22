@@ -2,6 +2,7 @@ import { User }  from "../models/User_model";
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt  from "jsonwebtoken";
+
 export const register = async (req: Request, res: Response) => {
     try {
         const { full_name, email, password, role } = req.body;
@@ -49,7 +50,7 @@ export const login = async (req: Request, res: Response) => {
 
         if (!email || !password) {
             return res.status(400).json({
-                message: "All fields are required"
+                message: "Invalid email or password"
             });
         }
 
