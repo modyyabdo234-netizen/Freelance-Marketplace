@@ -5,9 +5,9 @@ const options = {
     definition: {
         openapi: "3.0.0",
         info: {
-            title: "Crew management API",
+            title: "Freelance marketplace API",
             version: "1.0.0",
-            description: "project about managing crew members and missions assigned to them "
+            description: "project about managing freelancer gigs and client orders "
         },
         components: {
             securitySchemes: {
