@@ -1,1 +1,1 @@
-https://freelance-marketplace-production-90ec.up.railway.app/
+https://freelance-marketplace-production-90ec.up.railway.app/api-docs
