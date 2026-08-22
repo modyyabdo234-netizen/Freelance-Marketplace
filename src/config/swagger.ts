@@ -22,11 +22,11 @@ const options = {
             url: "/"
         }]
     },
-    // التعديل هنا: استخدام مسارات مباشرة تدعمها مكتبة البحث
+
     apis: [
         "./src/routes/*.ts",
         "./src/models/*.ts",
-        "./dist/routes/*.js",  // إذا كنت تقوم بعمل Build למجلد dist 
+        "./dist/routes/*.js",  
         "./dist/models/*.js"
     ]
 }
